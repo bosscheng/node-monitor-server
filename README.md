@@ -22,7 +22,21 @@ module.exports= {
 }
 
 ```
+# 主要功能
 
+## dashboard
+显示client 客户端实时信息。
+
+## 节点配置
+
+主要配置client 客户端信息
+
+## 历史记录
+
+主要记录dashboard的历史记录
+
+## 日志
+主要记录程序的log 日志
 
 
 # 部署(pm2)
