@@ -16,5 +16,5 @@ module.exports = {
       keepAlive: 1,
       useNewUrlParser: true
     }
-  }
+  },
 };

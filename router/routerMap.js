@@ -31,16 +31,6 @@ let array = [
       },
     ]
   },
-  {
-    path:'/fms',
-    children: [
-      {
-        path: '',
-        name: 'fms',
-        meta: {title: 'FMS节点', icon: 'example', noCache: true}
-      },
-    ]
-  },
   // history
   {
     path: '/history',

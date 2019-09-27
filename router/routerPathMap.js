@@ -1,7 +1,6 @@
 let map = {
   history: {meta: {title: '历史数据'}, path: '/history'},
-  ip: {meta: {title: 'CDN节点'}, path: '/ip'},
-  fms: {meta: {title: 'FMS节点'}, path: '/fms'},
+  ip: {meta: {title: '节点'}, path: '/ip'},
 
   log: {meta: {title: '日志'}, path: '/log'},
   index: {meta: {title: '首页', noCache: false}, path: '/'},

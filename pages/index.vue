@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-tabs type="border-card" v-model="tabName" @tab-click="handleTabsChange">
       <el-tab-pane key="0.0.0.0" label="总览" name="total">
-        <total-panel :dataList.sync="dataList" :currentTab="tabName" v-on:updateType="handleUpdateType"></total-panel>
+        <total-panel :dataList.sync="dataList" :currentTab="tabName"></total-panel>
       </el-tab-pane>
 
       <el-tab-pane v-for="(item,index) in dataList" :key="item.ip"
-                   :label="item.type ? item.ip +'('+item.type +')' :item.ip" :name="item.ip">
+                   :label="item.ip" :name="item.ip">
         <div>
-          <p class="panel-title"><strong>IP:{{item.type ? item.ip +'('+item.type +')' :item.ip}}</strong></p>
+          <p class="panel-title"><strong>IP:{{item.ip}}</strong></p>
           <el-row :gutter="10">
             <el-col :span="12">
               <div class="wrap-item" v-if="item.system">
@@ -37,78 +37,6 @@
               </template>
             </div>
           </div>
-          <div class="wrap-item" v-if="item.type === 'FMS'">
-            <div class="broadcast-list card-border" ref="broadcastList">
-              <p style="text-align: center">broadcast 信息</p>
-              <el-tabs type="border-card" v-model="tabBroadcastName" @tab-click="handleBroadcastTabsChange"
-                       v-if="broadcastList.length > 0">
-                <el-tab-pane v-for="broadcast in broadcastList" :key="broadcast.path" :label="broadcast.path"
-                             :name="broadcast.path">
-                  <el-row :gutter="40" class="panel-group-wrap">
-                    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-                      <div class="card-panel-item">
-                        <div class="card-panel-description">
-                          <div class="card-panel-text">路径</div>
-                          <div>{{broadcast.path}}</div>
-                        </div>
-                      </div>
-                    </el-col>
-                    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-                      <div class="card-panel-item">
-                        <div class="card-panel-description">
-                          <div class="card-panel-text">推流地址</div>
-                          <div>{{broadcast.publisheraddr}}</div>
-                        </div>
-                      </div>
-                    </el-col>
-                    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-                      <div class="card-panel-item">
-                        <div class="card-panel-description">
-                          <div class="card-panel-text">推流状态</div>
-                          <div v-if="broadcast.publiser == 1">
-                            <el-tag type="success">有推流</el-tag>
-                          </div>
-                          <div v-else>
-                            <el-tag type="danger">无推流</el-tag>
-                          </div>
-                        </div>
-                      </div>
-                    </el-col>
-                    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-                      <div class="card-panel-item">
-                        <div class="card-panel-description">
-                          <div class="card-panel-text">录制视频</div>
-                          <div v-if="broadcast.recordtype">
-                            <el-tag type="success">录制中...</el-tag>
-                          </div>
-                          <div v-else>
-                            <el-button-group>
-                              <el-button :loading="item.recordVideoLoading" type="primary"
-                                         @click="handleRecordVideo(item,broadcast.path,'record')">覆盖录制
-                              </el-button>
-                              <el-button :loading="item.recordVideoLoading" type="primary"
-                                         @click="handleRecordVideo(item,broadcast.path,'append')">追加录制
-                              </el-button>
-                            </el-button-group>
-                          </div>
-                        </div>
-                      </div>
-                    </el-col>
-                  </el-row>
-                  <el-table
-                    :data="item.subscriber || []"
-                    style="width: 100%">
-                    <el-table-column align="center" label="访客IP">
-                      <template slot-scope="scope">
-                        <span>{{scope.row}}</span>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-
-                </el-tab-pane>
-              </el-tabs>
-            </div>
-          </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -123,7 +51,7 @@
   import MemoryPanel from './components/MemoryPanel';
   import ChartsPanel from './components/ChartsPanel';
   import {find, getRandom, getEmptyList} from '@/utils/index';
-  import {SYNC_TYPE, CHART_TYPE, IP_TYPE} from "@/constants";
+  import {SYNC_TYPE, CHART_TYPE} from "@/constants";
 
   //
   export default {
@@ -131,9 +59,6 @@
       return {
         dataList: [],
         tabName: 'total',
-        broadcastList: [],
-        tabBroadcastName: '',
-
       };
     },
     components: {CountTo, TotalPanel, SystemPanel, MemoryPanel, ChartsPanel},
@@ -144,7 +69,6 @@
     mounted() {
       this.initSocket();
       this.healthCheck();
-      this.getBroadCastList();
     },
 
     methods: {
@@ -214,8 +138,6 @@
         tempItem.programMemList = getEmptyList(50);
         tempItem.lastTime = (new Date()).getTime();
         tempItem.programLogList = [];
-        tempItem.broadcastList = [];
-        tempItem.type = IP_TYPE.unknown;
 
         if (type === SYNC_TYPE.networkDownloadInfo) {
           tempItem.networkDownloadList.shift();
@@ -289,24 +211,6 @@
         }, 30 * 1000);
       },
 
-      //
-      getBroadCastList() {
-        this.$options.timeInterval2 = setInterval(() => {
-          this._getBroadCastList();
-        }, 5 * 1000);
-      },
-      async _getBroadCastList() {
-        let url = '/broadcast?t=' + new Date().getTime();
-        let {data} = await this.$axios.$get(url);
-        console.log(data);
-        this.broadcastList = (data || []).filter((item) => {
-          return item.path && item.publisheraddr;
-        });
-
-        if (!this.tabBroadcastName && this.broadcastList.length > 0) {
-          this.tabBroadcastName = this.broadcastList[0].path;
-        }
-      },
       removeItemList(list) {
         // 通过函数的形式，删除掉。
         list.forEach((item) => {
@@ -325,36 +229,6 @@
           }
         });
       },
-
-      //
-      handleUpdateType({ip, type}) {
-        let tempItem = find(this.dataList, (item) => {
-          return item.ip === ip;
-        });
-        if (tempItem && type) {
-          tempItem.type = type;
-        }
-      },
-
-      //
-      handleRecordVideo(item, path, type) {
-        let _path = '/command/' + type + '/' + path;
-        let href = 'http://' + item.ip + _path;
-
-        if (item.recordVideoLoading) {
-          return;
-        }
-
-        this.$set(item, 'recordVideoLoading', true);
-        this.$axios.$get(href).then((data) => {
-          console.log(data);
-          this.$set(item, 'recordVideoLoading', false);
-        }).catch((e) => {
-          console.error(e);
-          this.$set(item, 'recordVideoLoading', false);
-        });
-      }
-
     },
 
     destroyed() {

@@ -31,10 +31,3 @@ export const LOG_LEVEL = {
 };
 
 
-export const IP_TYPE = {
-  cdn: 'CDN',
-  fms: 'FMS',
-  unknown: ''
-};
-
-

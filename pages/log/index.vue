@@ -182,7 +182,6 @@
         listLoading: true,
         dataList: [],
         ipList: [],
-        fmsList: [],
         allList: [],
         logLevelConstant: LOG_LEVEL
       };
@@ -215,7 +214,6 @@
             label: item.name
           };
         });
-        await this.getFmsList();
 
         this.allList = [
           {
@@ -226,33 +224,17 @@
             }]
           },
           {
-            label: 'CND节点',
+            label: '节点',
             list: this.ipList
-          }, {
-            label: 'FMS节点',
-            list: this.fmsList
           }
         ];
 
         if (this.ipList.length > 0) {
           this.query.ip = this.ipList[0].value;
           this.getLogList();
-        } else if (this.fmsList.length > 0) {
-          this.query.ip = this.fmsList[0].value;
-          this.getLogList();
         } else {
           this.loading = false;
         }
-      },
-
-      async getFmsList() {
-        let {data} = await this.$axios.$get('/fms');
-        this.fmsList = (data || []).map((item) => {
-          return {
-            value: item.name,
-            label: item.name
-          };
-        });
       },
 
       // 获取日志。
