@@ -1,6 +1,13 @@
-# monitor-server
+# node-monitor-server
+node monitor server
+
+需要配合 node-monitor-client 一起使用才行, 利用client上传的数据，server 进行存储分析。
 
 
+
+# 依赖性
+
+依赖 mongodb 数据库
 
 # 配置信息
 
@@ -25,18 +32,18 @@ module.exports= {
 # 主要功能
 
 ## dashboard
-显示client 客户端实时信息。
+显示client 客户端实时信息（websocket 实时上传的数据）。
 
 ## 节点配置
 
-主要配置client 客户端信息
+主要配置client 客户端信息,需要监听的客户端的IP 信息。
 
 ## 历史记录
 
 主要记录dashboard的历史记录
 
 ## 日志
-主要记录程序的log 日志
+主要记录程序的 log 日志
 
 
 # 部署(pm2)
