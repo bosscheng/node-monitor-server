@@ -234,6 +234,7 @@
           this.getLogList();
         } else {
           this.loading = false;
+          this.listLoading = false;
         }
       },
 

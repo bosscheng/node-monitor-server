@@ -27,7 +27,7 @@ let array = [
       {
         path: '',
         name: 'ip',
-        meta: {title: 'CND节点', icon: 'international', noCache: true}
+        meta: {title: '节点', icon: 'international', noCache: true}
       },
     ]
   },
