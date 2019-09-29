@@ -46,8 +46,18 @@ module.exports= {
 主要记录程序的 log 日志
 
 
+# 部分截图
+
+<img src="./doc/images/1.png"></img>
+
+<img src="./doc/images/2.png"></img>
+
+<img src="./doc/images/3.png"></img>
+
+<img src="./doc/images/4.png"></img>
+
 # 部署(pm2)
-> npm run build
+> npm run pre-build && npm run build
 
 
 
